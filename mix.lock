@@ -1,0 +1,9 @@
+[ "continuum": {:git, "git://github.com/meh/continuum.git", "e5b00ea434e7321a36241ad8b6a36be83129ef34", []},
+  "cowboy": {:git, "git://github.com/extend/cowboy.git", "bbee34fe1638b742796b00b39c0859395a752167", []},
+  "dynamo": {:git, "git://github.com/elixir-lang/dynamo.git", "5be7cff51bf2f54ada60a9b58b65195716c2d5ef", []},
+  "eredis": {:git, "git://github.com/wooga/eredis.git", "313fce73b0fdb53f3a5f146a7adf19677b417cb5", [{:tag, "v1.0.6"}]},
+  "exredis": {:git, "git://github.com/artemeff/exredis.git", "b2e88a56b346f5b8f44f8b231d50c486d731f9fd", []},
+  "hackney": {:git, "git://github.com/benoitc/hackney.git", "5b0f7eb949ebebd6fabfbc4e08a7b7231850606a", []},
+  "json": {:git, "git://github.com/cblage/elixir-json.git", "3573eb996c893d384a58ad47e83f48a82fa9d990", []},
+  "mimetypes": {:git, "git://github.com/spawngrid/mimetypes.git", "47d37a977a7d633199822bf6b08353007483d00f", []},
+  "ranch": {:git, "git://github.com/extend/ranch.git", "41705752ffc7e3ecb96eef8374015ead4ca7f699", [{:ref, "0.8.5"}]} ]
