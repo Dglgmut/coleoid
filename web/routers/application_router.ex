@@ -15,8 +15,8 @@ defmodule ApplicationRouter do
   # routers, forwarding the requests between them:
   # forward "/posts", to: PostsRouter
 
-  def time_now do
-    DateTime.format DateTime.now, "h:i:s"
+  def macro_abstract_time_now do
+    DateTime.format({{2013,12,12},{00,00,00}} , "Ymd")
   end
 
   def date_for do
@@ -27,18 +27,42 @@ defmodule ApplicationRouter do
     end
   end
 
-  def set_redis, do: start |> query ["SET", "TimeAgo", time_now]
-  def get_redis, do: start |> query ["GET", "TimeAgo"]
+  def set_redis do
+    {_, estringona} = JSON.encode(['1': [images: "image_legal",
+                                         name: "Imarestaurant",
+                                         cuisine: "pamonha",
+                                         neighbourhood: "goaiana",
+                                         lat: "69",
+                                         long: "69",
+                                         ranking: 5.0,
+                                         city: "goiania",
+                                         chairs: 5],
+                                   '2': [images: "imagem mais legal",
+                                         name: "SOU OUTRO RESSTAURANTE",
+                                         cuisine: "abacate",
+                                         neighbourhood: "brasilandia mano!",
+                                         lat: "51",
+                                         long: "51",
+                                         ranking: 2.2,
+                                         city: "barueiri",
+                                         chairs: 2] ])
+    start |> query ["SET", macro_abstract_time_now, estringona]
+  end
+
+  def get_redis do 
+    {_, string} = JSON.decode (start |> query ["GET",  macro_abstract_time_now])
+    string
+  end
 
   get "/" do
     #currying for the great good
     date_formatted_as = date_for.({{2013,9,7},{12,0,0}})
 
-    conn.put_private :result_object, [ time_now: time_now, date_now: date_formatted_as.("Y"), redis_data: get_redis ]
+    conn.put_private :result_object, [ redis_data: get_redis ]
   end
 
   get "/time_ago" do
     set_redis
-    conn.put_private :result_object, ["setted redis to #{get_redis}"]
+    conn.put_private :result_object, get_redis
   end
 end
