@@ -15,54 +15,19 @@ defmodule ApplicationRouter do
   # routers, forwarding the requests between them:
   # forward "/posts", to: PostsRouter
 
-  def macro_abstract_time_now do
-    DateTime.format({{2013,12,12},{00,00,00}} , "Ymd")
+  #ex for datetime: "201309212230"
+  def get_redis(datetime) do
+    (start('127.0.0.1', 6379, 2) |> query ["SMEMBERS", datetime])
   end
 
-  def date_for do
-    fn (time) ->
-       fn (form) ->
-         DateTime.format time, form
-       end
-    end
-  end
-
-  def set_redis do
-    {_, estringona} = JSON.encode(['1': [images: "image_legal",
-                                         name: "Imarestaurant",
-                                         cuisine: "pamonha",
-                                         neighbourhood: "goaiana",
-                                         lat: "69",
-                                         long: "69",
-                                         ranking: 5.0,
-                                         city: "goiania",
-                                         chairs: 5],
-                                   '2': [images: "imagem mais legal",
-                                         name: "SOU OUTRO RESSTAURANTE",
-                                         cuisine: "abacate",
-                                         neighbourhood: "brasilandia mano!",
-                                         lat: "51",
-                                         long: "51",
-                                         ranking: 2.2,
-                                         city: "barueiri",
-                                         chairs: 2] ])
-    start |> query ["SET", macro_abstract_time_now, estringona]
-  end
-
-  def get_redis do 
-    {_, string} = JSON.decode (start |> query ["GET",  macro_abstract_time_now])
-    string
+  def decode(list, elements ) do
+    {_, decoded} = JSON.decode(list)
+    Enum.map(elements, fn(x) -> {x, decoded[x]} end )
   end
 
   get "/" do
-    #currying for the great good
-    date_formatted_as = date_for.({{2013,9,7},{12,0,0}})
-
-    conn.put_private :result_object, [ redis_data: get_redis ]
-  end
-
-  get "/time_ago" do
-    set_redis
-    conn.put_private :result_object, get_redis
+    redis_data = get_redis(conn.params[:datetime])
+    filtered_data = Enum.map(redis_data, fn(x) -> decode(x, ["name", "id"]) end)
+    conn.put_private :result_object, filtered_data #get_redis(conn.params[:datetime])
   end
 end
